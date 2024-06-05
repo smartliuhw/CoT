@@ -27,7 +27,7 @@ if [ ! -d ${LOG_DIR} ]; then
 fi
 MAX_LENGTH=1600
 
-torchrun --nproc_per_node=10 train.py \
+torchrun --nproc_per_node=10 ../src/train.py \
     --model_type ${MODEL_TYPE} \
     --train_data $TRAIN_DATA \
     --output_dir ${OUTPUT_DIR} \
@@ -44,7 +44,7 @@ torchrun --nproc_per_node=10 train.py \
     --save_steps 200 \
     --save_total_limit 5 \
     --save_safetensors \
-    --deepspeed deepspeed_config.json \
+    --deepspeed ../src/deepspeed_config.json \
     --seed 725 \
     --bf16 \
     --do_train \
