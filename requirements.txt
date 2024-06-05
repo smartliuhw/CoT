@@ -1,0 +1,7 @@
+torch
+transformers
+trl
+deepspeed
+tensorboard
+wandb
+# flash_attn
