@@ -10,7 +10,7 @@ export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7,8,9
 
 TIME=$(date "+%Y-%m-%d-%H-%M-%S")
 
-TRAIN_DATA="10000-universal_instruct|500-nq_open|500-trivia_qa|500-hotpot_qa"
+TRAIN_DATA="20000-universal_instruct|5000-nq_open|5000-trivia_qa|5000-hotpot_qa"
 FORMATTED_TRAIN_DATA=$(echo ${TRAIN_DATA} | sed 's/|/_/g')
 
 MODEL_TYPE=Llama2-7B
@@ -25,24 +25,25 @@ LOG_DIR=/home/shared_space/smart/cot_train/tensorboard_logs/${MODEL_NAME}
 if [ ! -d ${LOG_DIR} ]; then
     mkdir -p ${LOG_DIR}
 fi
-MAX_LENGTH=2048
+MAX_LENGTH=3072
 
 torchrun --nproc_per_node=10 ../src/train.py \
     --model_type ${MODEL_TYPE} \
     --train_data $TRAIN_DATA \
     --output_dir ${OUTPUT_DIR} \
-    --num_train_epochs 3 \
+    --num_train_epochs 5 \
     --per_device_train_batch_size 1 \
     --learning_rate ${LR} \
     --lr_scheduler_type "cosine" \
     --warmup_ratio 0.1 \
+    --warmup_steps 20 \
     --report_to wandb \
     --logging_dir ${LOG_DIR} \
     --logging_strategy steps \
     --logging_steps 1 \
     --save_strategy steps \
     --save_steps 200 \
-    --save_total_limit 5 \
+    --save_total_limit 2 \
     --save_safetensors \
     --deepspeed ../src/deepspeed_config.json \
     --seed 725 \

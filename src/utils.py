@@ -156,7 +156,7 @@ def get_train_data(train_data, seed=725):
         dataset = dataset.from_dict(selected_dataset)
         parsed_dataset.append(dataset)
             
-    all_train_datas = concatenate_datasets(parsed_dataset)
+    all_train_datas = concatenate_datasets(parsed_dataset).shuffle(seed=seed)
     return all_train_datas
     # return DatasetDict({"train": all_train_datas})
 
