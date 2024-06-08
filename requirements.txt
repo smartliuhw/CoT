@@ -1,6 +1,6 @@
-torch
-transformers
-trl
+torch==2.3.0
+transformers==4.41.2
+trl==0.8.6
 deepspeed
 tensorboard
 wandb
