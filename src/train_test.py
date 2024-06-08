@@ -13,6 +13,7 @@ from trl.trainer import ConstantLengthDataset
 from datasets import load_from_disk, concatenate_datasets, Dataset, DatasetDict
 import transformers
 from transformers import AutoTokenizer, AutoModelForCausalLM, HfArgumentParser
+from unsloth import FastLanguageModel
 
 from utils import get_train_data, formatting_prompts_func, formatting_constant_length_func, model_name_to_path
 
@@ -38,8 +39,8 @@ class TrainingArguments(transformers.TrainingArguments):
 
 def train():
     # args = parse_args()
-    # parser = HfArgumentParser((ModelArguments, DataArguments, TrainingArguments))
-    parser = TrlParser((ModelArguments, DataArguments, SFTConfig))
+    parser = HfArgumentParser((ModelArguments, DataArguments, TrainingArguments))
+    # parser = TrlParser((ModelArguments, DataArguments, SFTConfig))
     model_args, data_args, training_args = parser.parse_args_into_dataclasses()
     
     # Set random seed
@@ -47,8 +48,13 @@ def train():
 
     # Load model and tokenizer
     model_path = model_name_to_path[model_args.model_type]
-    tokenizer = AutoTokenizer.from_pretrained(model_path, padding_side="right")
-    model = AutoModelForCausalLM.from_pretrained(model_path, torch_dtype=torch.bfloat16)
+    # tokenizer = AutoTokenizer.from_pretrained(model_path, padding_side="right")
+    # model = AutoModelForCausalLM.from_pretrained(model_path, torch_dtype=torch.bfloat16)
+    model, tokenizer = FastLanguageModel.from_pretrained(
+        model_name=model_path,
+        max_seq_length=training_args.max_seq_length,
+        dtype=torch.bfloat16,
+    )
 
     # Load training data
     print("Loading training data...")
@@ -63,14 +69,15 @@ def train():
     # print(train_data)
 
     # Load trainer
-    training_args.packing = True
+    # training_args.packing = True
     trainer = SFTTrainer(
         model,
         training_args,
+        tokenizer=tokenizer,
         train_dataset=train_data,
         # dataset_text_field="text",
-        formatting_func=formatting_constant_length_func,
-        # packing=True,
+        formatting_func=formatting_prompts_func,
+        packing=False,
         max_seq_length=training_args.max_seq_length,
     )
     
