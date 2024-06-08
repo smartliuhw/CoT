@@ -29,7 +29,6 @@ class TrainingArguments(transformers.TrainingArguments):
     max_seq_length: int = field(default=8192, metadata={"help": "The cache directory."})
 
 def train():
-    # args = parse_args()
     parser = HfArgumentParser((ModelArguments, DataArguments, TrainingArguments))
     model_args, data_args, training_args = parser.parse_args_into_dataclasses()
     
@@ -44,21 +43,12 @@ def train():
     # Load training data
     print("Loading training data...")
     train_data = get_train_data(data_args.train_data, training_args.seed)
-    # train_data = ConstantLengthDataset(
-    #         tokenizer,
-    #         train_data,
-    #         formatting_func=formatting_constant_length_func,
-    #         seq_length=training_args.max_seq_length,
-    #         # num_of_sequences=100,
-    # )
-    # print(train_data)
 
     # Load trainer
     trainer = SFTTrainer(
         model,
         training_args,
         train_dataset=train_data,
-        # dataset_text_field="text",
         formatting_func=formatting_constant_length_func,
         packing=True,
         max_seq_length=training_args.max_seq_length,
