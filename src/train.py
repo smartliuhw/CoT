@@ -48,6 +48,7 @@ def train():
     trainer = SFTTrainer(
         model,
         training_args,
+        tokenizer=tokenizer,
         train_dataset=train_data,
         formatting_func=formatting_constant_length_func,
         packing=True,
