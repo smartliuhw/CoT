@@ -25,14 +25,14 @@ LOG_DIR=/home/shared_space/smart/cot_train/tensorboard_logs/${MODEL_NAME}
 if [ ! -d ${LOG_DIR} ]; then
     mkdir -p ${LOG_DIR}
 fi
-MAX_LENGTH=1600
+MAX_LENGTH=800
 
 torchrun --nproc_per_node=10 ../src/train.py \
     --model_type ${MODEL_TYPE} \
     --train_data $TRAIN_DATA \
     --output_dir ${OUTPUT_DIR} \
     --num_train_epochs 5 \
-    --per_device_train_batch_size 1 \
+    --per_device_train_batch_size 2 \
     --learning_rate ${LR} \
     --lr_scheduler_type "cosine" \
     --warmup_ratio 0.1 \
@@ -48,6 +48,7 @@ torchrun --nproc_per_node=10 ../src/train.py \
     --deepspeed ../src/deepspeed_config.json \
     --seed 725 \
     --bf16 \
+    --tf32 True \
     --do_train \
     --save_only_model \
     --max_seq_length ${MAX_LENGTH}

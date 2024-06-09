@@ -8,12 +8,13 @@ from dataclasses import dataclass, field
 import torch
 from tqdm import tqdm
 import pandas as pd
-from trl import SFTTrainer, DataCollatorForCompletionOnlyLM, SFTConfig, TrlParser
+from trl import SFTTrainer, DataCollatorForCompletionOnlyLM
+# from trl import SFTConfig, TrlParser
 from trl.trainer import ConstantLengthDataset
 from datasets import load_from_disk, concatenate_datasets, Dataset, DatasetDict
 import transformers
 from transformers import AutoTokenizer, AutoModelForCausalLM, HfArgumentParser
-from unsloth import FastLanguageModel
+# from unsloth import FastLanguageModel
 
 from utils import get_train_data, formatting_prompts_func, formatting_constant_length_func, model_name_to_path
 
@@ -48,13 +49,15 @@ def train():
 
     # Load model and tokenizer
     model_path = model_name_to_path[model_args.model_type]
-    # tokenizer = AutoTokenizer.from_pretrained(model_path, padding_side="right")
-    # model = AutoModelForCausalLM.from_pretrained(model_path, torch_dtype=torch.bfloat16)
-    model, tokenizer = FastLanguageModel.from_pretrained(
-        model_name=model_path,
-        max_seq_length=training_args.max_seq_length,
-        dtype=torch.bfloat16,
-    )
+    tokenizer = AutoTokenizer.from_pretrained(model_path, padding_side="right")
+    if "mistral" in model_path.lower() or "llama" in model_path.lower():
+        tokenizer.pad_token = tokenizer.eos_token
+    model = AutoModelForCausalLM.from_pretrained(model_path, torch_dtype=torch.bfloat16)
+    # model, tokenizer = FastLanguageModel.from_pretrained(
+    #     model_name=model_path,
+    #     max_seq_length=training_args.max_seq_length,
+    #     dtype=torch.bfloat16,
+    # )
 
     # Load training data
     print("Loading training data...")
