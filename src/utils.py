@@ -30,6 +30,9 @@ dataset_name_to_path = {
     "hotpot_qa_snippets_label": "/home/shared_space/smart/data/hotpot_qa",
     "nq_open_snippets_label": "../data/train_data/nq_open_parsed_data.jsonl",
     "trivia_qa_snippets_label": "../data/train_data/trivia_qa_parsed_data.jsonl",
+    "nq_open_with_snippets": "../data/train_data/nq_open_parsed_data.jsonl",
+    "trivia_qa_with_snippets": "../data/train_data/trivia_qa_parsed_data.jsonl",
+    "hotpot_qa_with_snippets": "/home/shared_space/smart/data/hotpot_qa",
 }
 
 model_name_to_path = {
@@ -63,6 +66,62 @@ def load_jsonl_to_dataset(jsonl_file):
             output = str([i+1 for i, label in enumerate(labels) if label == 1])
             data.append({"instruction": instruction, "input": input, "output": output})
     return Dataset.from_pandas(pd.DataFrame(data))
+
+def process_nq_open_with_snippets(data):
+    processed_data = []
+    for item in tqdm(data, desc="Processing nq_open's snippets label"):
+        question = item["query"]
+        snippets = item["snippets"]
+        labels = item["label"]
+        facts = ""
+        for idx, snippet in enumerate(snippets[:5]):
+            facts += f"{idx+1}. {snippet}\n\n"
+        input = f"Q: {question}\nA:"
+        output = labels[0]
+        instruction = f"Answer these questions based on the given facts: {facts.strip()}\n\n"
+        processed_data.append({"instruction": instruction, "input": input, "output": output})
+    
+    return Dataset.from_pandas(pd.DataFrame(processed_data))
+
+def process_trivia_qa_with_snippets(data):
+    processed_data = []
+    for item in tqdm(data, desc="Processing trivia_qa's snippets label"):
+        question = item["query"]
+        snippets = item["snippets"]
+        label = item["label"]
+        facts = ""
+        for idx, snippet in enumerate(snippets[:5]):
+            facts += f"{idx+1}. {snippet}\n\n"
+        input = f"Question: {question}\nAnswer:"
+        output = label
+        instruction = f"Please use the following facts {facts.strip()} to answer the question"
+        processed_data.append({"instruction": instruction, "input": input, "output": output})
+    
+    return Dataset.from_pandas(pd.DataFrame(processed_data))
+
+def process_hotpot_qa_with_snippets(data):
+    processed_data = []
+    for item in tqdm(data, desc="Processing hotpot_qa's snippets label"):
+        question = item["question"]
+        label = item["answer"]
+        titles = item["context"]["title"]
+        sentences = item["context"]["sentences"]
+        title_to_sentences = {}
+        for title, sents in zip(titles, sentences):
+            title_to_sentences[title] = sents
+        facts = ""
+        for i in range(min(5, len(item["supporting_facts"]))):
+            fact_title = item["supporting_facts"]["title"][i]
+            fact_id = item["supporting_facts"]["sent_id"][i]
+            fact = title_to_sentences[fact_title][fact_id]
+            facts += f"{i + 1}. {fact}"
+        input = f"Q:\n{question}\nAnswer:\n"
+        output = label
+        instruction = f"There are several facts:\n{facts.strip()}\nPlease answer the following question according to these facts."
+        processed_data.append({"instruction": instruction, "input": input, "output": output})
+    
+    return Dataset.from_pandas(pd.DataFrame(processed_data))
+        
 
 def process_hotpot_qa(data):
     processed_data = []
@@ -150,6 +209,21 @@ def get_train_data(train_data, seed=725):
         elif dataset_name == "hotpot_qa_snippets_label":
             dataset = load_from_disk(dataset_path)["train"]
             dataset = process_hotpot_qa(dataset)
+        elif dataset_name == "nq_open_with_snippets":
+            datas = []
+            with open(dataset_path, 'r', encoding='utf-8') as f:
+                for line in f:
+                    datas.append(json.loads(line))
+            dataset = process_nq_open_with_snippets(datas)
+        elif dataset_name == "trivia_qa_with_snippets":
+            datas = []
+            with open(dataset_path, 'r', encoding='utf-8') as f:
+                for line in f:
+                    datas.append(json.loads(line))
+            dataset = process_trivia_qa_with_snippets(datas)
+        elif dataset_name == "hotpot_qa_with_snippets":
+            dataset = load_from_disk(dataset_path)["train"]
+            dataset = process_hotpot_qa_with_snippets(dataset)
         
         dataset = dataset.shuffle(seed=seed)
         selected_dataset = dataset[:min(len(dataset), int(dataset_num))]
