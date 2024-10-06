@@ -27,7 +27,7 @@ if [ ! -d ${LOG_DIR} ]; then
 fi
 MAX_LENGTH=768
 
-torchrun --nproc_per_node=10 ../src/train_test.py \
+torchrun --nproc_per_node=10 ../src/train.py \
     --model_type ${MODEL_TYPE} \
     --train_data $TRAIN_DATA \
     --output_dir ${OUTPUT_DIR} \

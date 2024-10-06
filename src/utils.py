@@ -20,6 +20,9 @@ avail_datasets = [
     "trivia_qa_snippets_label",
     "hotpot_qa",
     "hotpot_qa_snippets_label",
+    "nq_open_with_snippets",
+    "trivia_qa_with_snippets",
+    "hotpot_qa_with_snippets",
 ]
 
 dataset_name_to_path = {
