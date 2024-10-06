@@ -43,6 +43,14 @@ def train():
     # Load training data
     print("Loading training data...")
     train_data = get_train_data(data_args.train_data, training_args.seed)
+    
+    # set completion only data collator
+    response_template = "### Response:"
+    collator = DataCollatorForCompletionOnlyLM(
+        tokenizer=tokenizer,
+        response_template=response_template,
+        max_length=training_args.max_seq_length,
+    )
 
     # Load trainer
     trainer = SFTTrainer(
@@ -50,8 +58,9 @@ def train():
         training_args,
         tokenizer=tokenizer,
         train_dataset=train_data,
-        formatting_func=formatting_constant_length_func,
-        packing=True,
+        formatting_func=formatting_prompts_func,
+        # packing=True,
+        data_collator=collator,
         max_seq_length=training_args.max_seq_length,
     )
     
