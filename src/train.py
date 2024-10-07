@@ -53,7 +53,7 @@ def train():
     
     # set completion only data collator
     if "llama" in model_args.model_type.lower():
-        response_template = " \n\n### Response:"
+        response_template = "\n\n### Response:"
     else:
         response_template = "### Response:"
     collator = DataCollatorForCompletionOnlyLM(
