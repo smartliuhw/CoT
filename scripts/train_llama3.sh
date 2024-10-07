@@ -10,7 +10,7 @@ export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7,8,9
 
 TIME=$(date "+%Y-%m-%d-%H-%M-%S")
 
-TRAIN_DATA="20000-universal_instruct|5000-nq_open|5000-trivia_qa|5000-hotpot_qa"
+TRAIN_DATA="2000-universal_instruct|1000-nq_open_with_snippets|1000-trivia_qa_with_snippets|1000-hotpot_qa_with_snippets"
 FORMATTED_TRAIN_DATA=$(echo ${TRAIN_DATA} | sed 's/|/_/g')
 
 MODEL_TYPE=Llama3-8B
@@ -27,7 +27,7 @@ if [ ! -d ${LOG_DIR} ]; then
 fi
 MAX_LENGTH=1024
 
-torchrun --nproc_per_node=10 ../src/train_test.py \
+torchrun --nproc_per_node=10 ../src/train.py \
     --model_type ${MODEL_TYPE} \
     --train_data $TRAIN_DATA \
     --output_dir ${OUTPUT_DIR} \

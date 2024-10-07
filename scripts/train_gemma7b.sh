@@ -48,7 +48,7 @@ torchrun --nproc_per_node=10 ../src/train.py \
     --deepspeed ../src/deepspeed_config.json \
     --seed 725 \
     --bf16 \
-    --tf32 True \
     --do_train \
     --save_only_model \
     --max_seq_length ${MAX_LENGTH}
+    # --tf32 True \

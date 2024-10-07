@@ -40,8 +40,9 @@ def train():
     tokenizer = AutoTokenizer.from_pretrained(model_path, padding_side="right")
     model = AutoModelForCausalLM.from_pretrained(model_path, torch_dtype=torch.bfloat16)
     if "mistral" in model_args.model_type.lower():
-        tokenizer.add_special_tokens({"pad_token": "<pad>"})
-        model.resize_token_embeddings(len(tokenizer))
+        # tokenizer.add_special_tokens({"pad_token": "<pad>"})
+        # model.resize_token_embeddings(len(tokenizer))
+        tokenizer.pad_token = tokenizer.unk_token
 
     # Load training data
     print("Loading training data...")
