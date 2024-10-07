@@ -32,7 +32,7 @@ torchrun --nproc_per_node=10 ../src/train.py \
     --train_data $TRAIN_DATA \
     --output_dir ${OUTPUT_DIR} \
     --num_train_epochs 5 \
-    --per_device_train_batch_size 2 \
+    --per_device_train_batch_size 8 \
     --learning_rate ${LR} \
     --lr_scheduler_type "cosine" \
     --warmup_ratio 0.1 \
