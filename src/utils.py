@@ -246,25 +246,23 @@ def formatting_prompts_func(examples):
 
         if len(input) >= 2:
             text = f'''Below is an instruction that describes a task, paired with an input that provides further context. Write a response that appropriately completes the request.
+
+### Instruction:
+{instruction}
+
+### Input:
+{input}
             
-            ### Instruction:
-            {instruction}
-            
-            ### Input:
-            {input}
-            
-            ### Response:
-            {output}
-            '''
+### Response:
+{output}'''
         else:
             text = f'''Below is an instruction that describes a task, paired with an input that provides further context. Write a response that appropriately completes the request.
             
-            ### Instruction:
-            {instruction}
+### Instruction:
+{instruction}
             
-            ### Response:
-            {output}
-            '''
+### Response:
+{output}'''
         output_text.append(text)
 
     return output_text
