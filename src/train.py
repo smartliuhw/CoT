@@ -52,13 +52,17 @@ def train():
     train_data = get_train_data(data_args.train_data, training_args.seed)
     
     # set completion only data collator
-    if "llama" in model_args.model_type.lower():
-        response_template = "\n\n### Response:"
-    else:
-        response_template = "### Response:"
+    # if "llama" in model_args.model_type.lower():
+    #     response_template = "\n\n### Response:"
+    # else:
+    #     response_template = "### Response:"
+    response_template = "\n### Response:"
+    response_template_ids = tokenizer.encode(response_template, add_special_tokens=False)[2:]
+    
     collator = DataCollatorForCompletionOnlyLM(
+        response_template_ids,
         tokenizer=tokenizer,
-        response_template=response_template,
+        # response_template=response_template,
         # max_length=training_args.max_seq_length,
     )
 
