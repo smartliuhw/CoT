@@ -39,6 +39,9 @@ def train():
     model_path = model_name_to_path[model_args.model_type]
     tokenizer = AutoTokenizer.from_pretrained(model_path, padding_side="right")
     model = AutoModelForCausalLM.from_pretrained(model_path, torch_dtype=torch.bfloat16)
+    if "mistral" in model_args.model_type.lower():
+        tokenizer.add_special_tokens({"pad_token": "<pad>"})
+        model.resize_token_embeddings(len(tokenizer))
 
     # Load training data
     print("Loading training data...")
@@ -49,7 +52,7 @@ def train():
     collator = DataCollatorForCompletionOnlyLM(
         tokenizer=tokenizer,
         response_template=response_template,
-        max_length=training_args.max_seq_length,
+        # max_length=training_args.max_seq_length,
     )
 
     # Load trainer

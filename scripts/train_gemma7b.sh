@@ -10,7 +10,7 @@ export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7,8,9
 
 TIME=$(date "+%Y-%m-%d-%H-%M-%S")
 
-TRAIN_DATA="20000-universal_instruct|5000-nq_open|5000-trivia_qa|5000-hotpot_qa"
+TRAIN_DATA="2000-universal_instruct|1000-nq_open_with_snippets|1000-trivia_qa_with_snippets|1000-hotpot_qa_with_snippets"
 FORMATTED_TRAIN_DATA=$(echo ${TRAIN_DATA} | sed 's/|/_/g')
 
 MODEL_TYPE=Gemma-7B
@@ -25,7 +25,7 @@ LOG_DIR=/home/shared_space/smart/cot_train/tensorboard_logs/${MODEL_NAME}
 if [ ! -d ${LOG_DIR} ]; then
     mkdir -p ${LOG_DIR}
 fi
-MAX_LENGTH=800
+MAX_LENGTH=768
 
 torchrun --nproc_per_node=10 ../src/train.py \
     --model_type ${MODEL_TYPE} \
