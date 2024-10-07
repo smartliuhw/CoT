@@ -56,7 +56,7 @@ def train():
     #     response_template = "\n\n### Response:"
     # else:
     #     response_template = "### Response:"
-    response_template = "\n### Response:"
+    response_template = "\n### Response:\n"
     response_template_ids = tokenizer.encode(response_template, add_special_tokens=False)[2:]
     
     collator = DataCollatorForCompletionOnlyLM(
