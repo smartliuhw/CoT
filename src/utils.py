@@ -252,7 +252,7 @@ def formatting_prompts_func(examples):
 
 ### Input:
 {input}
-            
+
 ### Response:
 {output}'''
         else:
@@ -260,7 +260,7 @@ def formatting_prompts_func(examples):
             
 ### Instruction:
 {instruction}
-            
+
 ### Response:
 {output}'''
         output_text.append(text)
