@@ -52,7 +52,10 @@ def train():
     train_data = get_train_data(data_args.train_data, training_args.seed)
     
     # set completion only data collator
-    response_template = "### Response:"
+    if "llama" in model_args.model_type.lower():
+        response_template = "\n### Response:"
+    else:
+        response_template = "### Response:"
     collator = DataCollatorForCompletionOnlyLM(
         tokenizer=tokenizer,
         response_template=response_template,
