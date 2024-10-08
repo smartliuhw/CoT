@@ -17,15 +17,20 @@ MODEL_TYPE=Llama2-7B
 LR=5e-5
 
 MODEL_NAME=${MODEL_TYPE}_${TIME}_${LR}_${FORMATTED_TRAIN_DATA}
-OUTPUT_DIR=/home/shared_space/smart/cot_train/output/${MODEL_NAME}
+if [ ! -d "/home/nvidia_2_backup"]; then
+    BASE_DIR=/backup
+else
+    BASE_DIR=/home/nvidia_2_backup
+fi
+OUTPUT_DIR=${BASE_DIR}/smart/cot_train/output/${MODEL_NAME}
 if [ ! -d ${OUTPUT_DIR} ]; then
     mkdir -p ${OUTPUT_DIR}
 fi
-LOG_DIR=/home/shared_space/smart/cot_train/tensorboard_logs/${MODEL_NAME}
+LOG_DIR=${BASE_DIR}/smart/cot_train/tensorboard_logs/${MODEL_NAME}
 if [ ! -d ${LOG_DIR} ]; then
     mkdir -p ${LOG_DIR}
 fi
-MAX_LENGTH=1024
+MAX_LENGTH=768
 
 torchrun --nproc_per_node=10 ../src/train.py \
     --model_type ${MODEL_TYPE} \
