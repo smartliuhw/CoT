@@ -49,7 +49,7 @@ def train():
 
     # Load training data
     print("Loading training data...")
-    train_data = get_train_data(data_args.train_data, training_args.seed)
+    train_data = get_train_data(data_args.train_data, model_args.model_type, training_args.seed)
     
     # set completion only data collator
     # if "llama" in model_args.model_type.lower():
