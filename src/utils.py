@@ -159,11 +159,13 @@ def process_jsonl_cot(jsonl_file, model_name):
             snippets_input = ""
             snippet_index = 1
             output_index = []
-            for label, snippet in zip(snippet_labels, snippets)[:5]:
+            for label, snippet in zip(snippet_labels, snippets):
                 snippets_input += f"{snippet_index}. {snippet.strip()}\n"
                 if label == 1:
                     output_index.append(snippet_index)
                 snippet_index += 1
+                if snippet_index > 5:
+                    break
             
             input_text = f"question: {question}\n\nsnippets:\n{snippets_input}"
             output_text = str(output_index) + model_name_to_sep_token[model_name] + answer
