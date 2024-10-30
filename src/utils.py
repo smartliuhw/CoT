@@ -50,14 +50,24 @@ model_name_to_path = {
     "Llama2-7B": "/home/shared_space/smart/models/Llama2-7B",
     "Llama3-8B": "/home/shared_space/smart/models/Llama3-8B",
     "Mistral-7B": "/home/shared_space/smart/models/Mistral-7B",
+    "Gemma-2B-Instruct": "/backup/smart/models/Gemma2-2B-Instruct",
+    "Gemma-7B-Instruct": "/backup/smart/models/Gemma-7B-Instruct",
+    "Llama2-7B-Instruct": "/backup/smart/models/Llama2-7B-chat-hf",
+    "Llama3-8B-Instruct": "/backup/model/Llama3-8B-Instruct",
+    "Mistral-7B-Instruct": "/backup/smart/models/Mistral-7B-Instruct-v0.2",
 }
 
 model_name_to_sep_token = {
     "Gemma-2B": "<unused2>",
+    "Gemma-2B-Instruct": "<unused2>",
     "Gemma-7B": "<unused2>",
+    "Gemma-7B-Instruct": "<unused2>",
     "Llama2-7B": "<0x02>",
+    "Llama2-7B-Instruct": "<0x02>",
     "Llama3-8B": "<|reserved_special_token_2|>",
+    "Llama3-8B-Instruct": "<|reserved_special_token_2|>",
     "Mistral-7B": "<0x02>",
+    "Mistral-7B-Instruct": "<0x02>",
 }
 
 def add_instruction(batch):

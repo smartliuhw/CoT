@@ -14,7 +14,8 @@ TIME=$(date "+%Y-%m-%d-%H-%M-%S")
 TRAIN_DATA="2000-universal_instruct|1000-nq_open_cot|1000-trivia_qa_cot|1000-hotpot_qa_cot"
 FORMATTED_TRAIN_DATA=$(echo ${TRAIN_DATA} | sed 's/|/_/g')
 
-MODEL_TYPE=Gemma-7B
+# MODEL_TYPE=Gemma-7B
+MODEL_TYPE=Gemma-7B-Instruct
 LR=5e-5
 
 MODEL_NAME=${MODEL_TYPE}_${TIME}_${LR}_${FORMATTED_TRAIN_DATA}
