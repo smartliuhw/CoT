@@ -145,7 +145,7 @@ def process_jsonl_cot(jsonl_file, model_name):
     random.seed(725)
     with open(jsonl_file, 'r', encoding='utf-8') as f:
         desc = f"Loading {jsonl_file.split('/')[-1]}"
-        for line in tqdm(f, desc=desc):
+        for line in tqdm(f, desc=desc, total=len(f.readlines())):
             line = json.loads(line)
             if line["remark"] != "":
                 continue
@@ -285,9 +285,9 @@ def get_train_data(train_data, model_name, seed=725):
             dataset = dataset.remove_columns(columns_to_remove)
         elif dataset_name == "nq_open_snippets_label" or dataset_name == "trivia_qa_snippets_label":
             dataset = load_jsonl_to_dataset(dataset_path)
-        elif dataset_name == "hotpot_qa_cot":
-            dataset = load_from_disk(dataset_path)["train"]
-            dataset = process_hotpot_qa_cot(dataset)
+        # elif dataset_name == "hotpot_qa_cot":
+        #     dataset = load_from_disk(dataset_path)["train"]
+        #     dataset = process_hotpot_qa_cot(dataset)
         elif dataset_name == "nq_open_with_snippets":
             datas = []
             with open(dataset_path, "r", encoding="utf-8") as f:

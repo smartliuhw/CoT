@@ -10,7 +10,8 @@ export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7,8,9
 
 TIME=$(date "+%Y-%m-%d-%H-%M-%S")
 
-TRAIN_DATA="2000-universal_instruct|1000-nq_open_with_snippets|1000-trivia_qa_with_snippets|1000-hotpot_qa_with_snippets"
+# TRAIN_DATA="2000-universal_instruct|1000-nq_open_with_snippets|1000-trivia_qa_with_snippets|1000-hotpot_qa_with_snippets"
+TRAIN_DATA="2000-universal_instruct|1000-nq_open_cot|1000-trivia_qa_cot|1000-hotpot_qa_cot"
 FORMATTED_TRAIN_DATA=$(echo ${TRAIN_DATA} | sed 's/|/_/g')
 
 MODEL_TYPE=Gemma-7B
@@ -41,7 +42,7 @@ torchrun --nproc_per_node=10 ../src/train.py \
     --learning_rate ${LR} \
     --lr_scheduler_type "cosine" \
     --warmup_ratio 0.1 \
-    --warmup_steps 20 \
+    --warmup_steps 40 \
     --report_to wandb \
     --logging_dir ${LOG_DIR} \
     --logging_strategy steps \
